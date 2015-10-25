@@ -1,13 +1,355 @@
 <!DOCTYPE html>
+
 <html>
+
   <head>
-    
-    <style type="text/css"></style>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      canvas {
+        border: 2px solid yellow; 
+      }
+        
+     body {background-color:black}
+    </style>
+
   </head>
+
   <body>
-    
+
+    <canvas id="canvas-for-ball"></canvas>
+
     <script type="text/javascript">
-      
+        
+       var canvas = document.getElementById("canvas-for-ball"); 
+       // Get a 2D context for the canvas.
+       var ctx = canvas.getContext("2d"); 
+       
+        // Objects
+
+         var ball = {
+
+            radius: 0
+            ,position: { x: 0, y: 0 }
+            ,velocity: { x: 0, y: 0 }
+            ,acceleration: 0
+
+             // function to draw ball
+            ,draw: function() {
+
+                // Make the fill style red.
+            ctx.fillStyle = "rgb(255, 0, 0)";
+
+                ctx.beginPath();
+
+                // draws circle 
+                ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI); 
+
+                // fill circles colour
+                ctx.fill();
+
+            } // draw()
+
+         }; // ball object
+        
+        var userball = {
+
+            radius: 0
+            ,position: { x: 0, y: 0 }
+            ,velocity: { x: 0, y: 0 }
+            ,acceleration: 0
+
+             // function to draw ball
+            ,draw: function() {
+
+                // Make the fill style red.
+            ctx.fillStyle = "rgb(255, 255, 0)";
+
+                ctx.beginPath();
+
+                // draws circle 
+                ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI); 
+
+                // fill circles colour
+                ctx.fill();
+
+            } // draw()
+
+         }; // ball object
+        
+        
+        
+        
+        /*// Constructor for blue rectangle
+		 function Rectangle(){
+			 
+			 this.position = {x: 50, y: 50};
+			 this.width = 40;
+			 this.height = 20;
+			 this.isAlive = true;
+			 
+			 this.draw = function(){
+				 
+			 	if(this.isAlive){
+					 
+				 // set colour for square
+				 ctx.fillStyle = "rgb(0, 0, 255)";
+				 // draw
+				 ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+			 	} // if
+				 
+			 }; // draw()
+		 }; // Rectanle Object*/
+        
+//Variables//////////////////////////////////////////////////////////////////////////////////
+		 
+		 var gravity = 0.1;
+			 
+		 var blocks = [];
+		    
+        
+        
+        
+        
+        
+//Functions//////////////////////////////////////////////////////////////////////////
+        
+        
+        function initCanvas(){
+			 
+			 //height and width of the canvas
+			 canvas.width = 500;
+			 canvas.height = 500;
+			 
+		 } // init()
+        
+        function initBall(){
+			 // initialise the ball object
+			 ball.radius = 20;
+			 ball.position.x = canvas.width / 2;
+			 ball.position.y = canvas.height + 5;
+			 ball.velocity.x = 5;
+			 ball.velocity.y = 2;
+			 ball.acceleration = gravity;
+			 
+		 } // initballl()
+        
+        
+        function initUserBall(){
+			 // initialise the ball object
+			 userball.radius = 20;
+			 userball.position.x = canvas.width  /2;
+			 userball.position.y = canvas.height /2;
+			 //userball.acceleration = gravity;
+			 
+		 } // init()
+        
+        
+        /*function checkIfInGrid(ballX, ballY, gridX, gridY, gridWidth, gridHeight){
+			 
+			 var isInGrid = false;
+			 
+			 // checks to see if point clicked is in the specified grid square
+			 if(ballX > gridX && ballX < (gridX + gridWidth)
+				&& ballY > gridY && ballY < (gridY + gridHeight)){
+				 
+				 isInGrid = true;
+			 } else {
+				 
+				 isInGrid = false;
+			 }  // if
+			 
+			 return isInGrid;
+		 }; // checkIfInGrid()*/
+		 
+        
+        
+        
+        
+        	 // A function to repeat every time the animation loops.
+		function update() {
+			
+			// clear the canvas so the object can be redrawn
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			// draws the ball
+			ball.draw();
+            userball.draw();
+            
+        //draw blocks
+            for(var i = 0; i < blocks.length; i++){
+				
+				if(blocks[i].isAlive)
+					blocks[i].draw();
+				
+			} // for
+			
+			// add velocity to ball
+			ball.position.x -= ball.velocity.x ;
+			ball.position.y -= ball.velocity.y ;
+			
+			// adds gravity (acceleration)
+			//ball.velocity.y += ball.acceleration;
+            
+			// if ball reaches bottom of the canvas, bounce back
+			if(ball.position.y >= canvas.height - ball.radius){
+				// stops the ball from leaving canvas
+				ball.position.y = canvas.height - ball.radius;
+				// makes the ball bounce back
+				ball.velocity.y = -ball.velocity.y;
+			} // if
+            
+			// if the ball reaches the top of the canvas, bounce back
+			if(ball.position.y <= 0 + ball.radius){
+				// stops the ball from leaving canvas
+				ball.position.y = 0 + ball.radius;
+				// makes the ball bounce back
+				ball.velocity.y = -ball.velocity.y;
+			} // if
+            
+            
+			// if ball reaches right side of the canvas, bounce back
+			if(ball.position.x >= canvas.width - ball.radius){
+				// stops the ball from leaving canvas
+				ball.position.x = canvas.width - ball.radius;
+				// makes the ball bounce back
+				ball.velocity.x = - ball.velocity.x;
+			} // if
+            
+            
+			// if ball reaches left side of the canvas, bounce back
+			if(ball.position.x <= 0 + ball.radius){
+				// stops the ball from leaving canvas
+				ball.position.x = 0 + ball.radius;
+				// makes the ball bounce back
+				ball.velocity.x = - ball.velocity.x;
+			} // if
+            
+            
+            /*for(var i = 0; i < blocks.length; i++){
+			
+				// check to see if rectangle is alive and if the ball has entered it
+				if(blocks[i].isAlive && checkIfInGrid(ball.position.x, ball.position.y, blocks[i].position.x,           
+                                                      blocks[i].position.y,blocks[i].width, blocks[i].height)){
+					// destroy block
+					blocks[i].isAlive = false;
+					// bounce off block
+					ball.velocity.y = -ball.velocity.y;
+				} // if
+				
+				
+			} // for*/
+            
+            
+			window.requestAnimationFrame(update);
+		} // update()
+        
+        
+        
+        
+        function main(){
+			 
+			 // initialise canvas
+			 initCanvas();
+            
+             // initialise ball
+             initBall();
+            
+            // initialise userball
+             initUserBall();
+			 
+			 
+			/* // set up blocks
+			 for(var i = 0; i < 10; i++){
+				 
+				 for(var j = 0; j < 4; j++){
+					 
+					 var blueRect = new Rectangle();
+					 
+					 blueRect.position.x = 50 * i;
+					 blueRect.position.y = 30 * j;
+					 blocks.push(blueRect);
+					 
+				 } // for
+				
+			 } // for*/
+			 
+			 // get the animation going
+      	     update();
+			
+		 } // main()
+            
+/////////////////////////////////////////////////////////////////////////////////////////////
+        
+        
+        main();
+        
+        
+        // Add an event listener to the keydown event. 
+        window.addEventListener("keydown", function(event) { 
+        // Just log the event to the console.
+        console.log(event);
+            
+        switch (event.which) {
+        // key code for left arrow 37
+        case 37:
+            if(userball.position.x-userball.radius>=userball.radius){
+                userball.position.x-=userball.radius;
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                console.log('left arrow key pressed!');
+                ctx.beginPath();
+                ctx.arc(userball.position.x, userball.position.y, userball.radiusr, 0, 2 * Math.PI);
+                ctx.fill(); 
+            }
+            break;
+        
+        // key code for right arrow 39
+        case 39:  
+            if(userball.position.x+userball.radius<canvas.width){    
+                userball.position.x+=userball.radius;   
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                console.log('right arrow key pressed!');
+                ctx.beginPath();
+                ctx.arc(userball.position.x, userball.position.y, userball.radius, 0, 2 * Math.PI);
+                ctx.fill();  
+            }
+            break;
+                
+        // key code for down arrow 40
+        case 40:
+            if(userball.position.y+userball.radius<canvas.height){    
+                userball.position.y+=userball.radius;
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                console.log('down arrow key pressed!');
+                ctx.beginPath();
+                ctx.arc(userball.position.x, userball.position.y, userball.radius, 0, 2 * Math.PI);
+                ctx.fill();  
+            }
+            break;
+                
+        // key code for up arrow 38
+        case 38:
+            if(userball.position.y-userball.radius>=userball.radius){
+                userball.position.y-=userball.radius;
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                console.log('up arrow key pressed!');
+                ctx.beginPath();
+                ctx.arc(userball.position.x, userball.position.y, userball.radius, 0, 2 * Math.PI);
+                ctx.fill();  
+            }
+            break;    
+    }  
+            
+        });
+
+
     </script>
+
   </body>
+
 </html>
+
+
+
+
+
