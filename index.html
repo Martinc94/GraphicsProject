@@ -162,7 +162,38 @@
 			 
 			 return isInGrid;
 		 }; // checkIfInGrid()*/
+
+        
+        
+        
+        
 		 
+        //method to see if balls Intersect
+         function intersect (){
+             distanceX = userball.position.x- ball.position.x;
+             distanceY = userball.position.y- ball.position.y;
+             radiusSum = userball.radius + ball.radius;
+             
+             if((distanceX * distanceX + distanceY * distanceY <= radiusSum * radiusSum) !=0){
+                 //balls intersect
+                 //console.log("Touching");
+                 //window.alert("GAME OVER"); 
+                 gameOver();
+             }
+         
+    };//end intersect
+    
+     function gameOver (){
+         ctx.fillStyle = "rgb(255, 0, 0)";
+         ctx.fillRect(0, 0, canvas.width, canvas.height);
+         
+         //sleep until reset(call init)
+             
+         
+    };//end gameOver   
+        
+        
+        
         
         
         
@@ -176,13 +207,17 @@
 			ball.draw();
             userball.draw();
             
-        //draw blocks
+            //to check if touching
+            intersect();
+            
+            
+        /*//draw blocks
             for(var i = 0; i < blocks.length; i++){
 				
 				if(blocks[i].isAlive)
 					blocks[i].draw();
 				
-			} // for
+			} // for*/
 			
 			// add velocity to ball
 			ball.position.x -= ball.velocity.x ;
@@ -324,6 +359,7 @@
     }  
             
         });
+        //
 
 
     </script>
