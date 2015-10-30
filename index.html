@@ -8,7 +8,11 @@
 
     <style type="text/css">
       canvas {
-        border: 2px solid yellow; 
+        border: 2px solid lime;   
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    
       }
         
      body {background-color:black}
@@ -28,7 +32,7 @@
        
         // Objects
 
-         var ball = {
+        var ball = {
 
             radius: 0
             ,position: { x: 0, y: 0 }
@@ -76,42 +80,36 @@
 
             } // draw()
 
-         }; // ball object
+         }; // Userball object
         
         
-        
-        
-        /*// Constructor for blue rectangle
-		 function Rectangle(){
+		 var Rectangle={
 			 
-			 this.position = {x: 50, y: 50};
-			 this.width = 40;
-			 this.height = 20;
-			 this.isAlive = true;
+			 position : {x: 50, y: 50}
+			 ,width : 40
+			 ,height : 40
+			 ,isAlive : true
 			 
-			 this.draw = function(){
+			 ,draw : function(){
 				 
 			 	if(this.isAlive){
 					 
 				 // set colour for square
-				 ctx.fillStyle = "rgb(0, 0, 255)";
+				 ctx.fillStyle = "rgb(191, 255, 0)";
 				 // draw
 				 ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 			 	} // if
 				 
-			 }; // draw()
-		 }; // Rectanle Object*/
+			 } // draw()
+		 }; // Rectanle Object
         
 //Variables//////////////////////////////////////////////////////////////////////////////////
 		 
-		 var gravity = 0.1;
-			 
-		 var blocks = [];
+		 var gravity = 0.01;
 		    
+         var animate=false;
         
-        
-        
-        
+         var score=0;
         
 //Functions//////////////////////////////////////////////////////////////////////////
         
@@ -133,7 +131,7 @@
 			 ball.velocity.y = 2;
 			 ball.acceleration = gravity;
 			 
-		 } // initballl()
+		 } // initball()
         
         
         function initUserBall(){
@@ -141,12 +139,27 @@
 			 userball.radius = 20;
 			 userball.position.x = canvas.width  /2;
 			 userball.position.y = canvas.height /2;
-			 //userball.acceleration = gravity;
+			 
 			 
 		 } // initUserBall()
         
+        function initRect(){
+			 // initialise the Rectangle object
+            do{
+			 var xRect=Math.floor((Math.random() * 500) + 1); 
+             var yRect=Math.floor((Math.random() * 500) + 1); 
+                
+            }while(xRect % 2 === 0&& yRect % 2=== 0);
+            
+            Rectangle.position.x=xRect;
+            Rectangle.position.y=yRect;
+            
+            Rectangle.isAlive=true;
+			 
+		 } // initRect()
         
-        /*function checkIfInGrid(ballX, ballY, gridX, gridY, gridWidth, gridHeight){
+        
+        function checkIfInGrid(ballX, ballY, gridX, gridY, gridWidth, gridHeight){
 			 
 			 var isInGrid = false;
 			 
@@ -161,12 +174,7 @@
 			 }  // if
 			 
 			 return isInGrid;
-		 }; // checkIfInGrid()*/
-
-        
-        
-        
-        
+		 }; // checkIfInGrid()
 		 
         //method to see if balls Intersect
          function intersect (){
@@ -176,190 +184,223 @@
              
              if((distanceX * distanceX + distanceY * distanceY <= radiusSum * radiusSum) !=0){
                  //balls intersect
-                 //console.log("Touching");
-                 //window.alert("GAME OVER"); 
                  gameOver();
              }
          
     };//end intersect
     
-     function gameOver (){
+         function gameOver (){
+             //prints red square over Canvas
+             ctx.fillStyle = "rgb(255, 0, 0)";
+             ctx.fillRect(0, 0, canvas.width, canvas.height);       
+
+             //print text to canvas
+             ctx.fillStyle = "rgb(0, 0, 0)";
+             ctx.font="50px Georgia";
+             ctx.fillText("Game Over",170,canvas.height/2);
+
+             ctx.font="20px Georgia";
+             ctx.fillText("Click To Reset",230,340);
+             ctx.fillText("Your Score Is "+score,230,380);
+
+             //stops animation from happening
+             animate=false;               
+        };//end gameOver   
+        
+    function startup(){
+        
          ctx.fillStyle = "rgb(255, 0, 0)";
          ctx.fillRect(0, 0, canvas.width, canvas.height);
-         
-         //sleep until reset(call init)
-             
-         
-    };//end gameOver   
+         ctx.fillStyle = "rgb(0, 0, 0)";
+         //print text to canvas
+         ctx.font="50px Georgia";
+         ctx.fillText("\"Dodge\"",210,canvas.height/2);
+         ctx.font="20px Georgia";
+         ctx.fillText("By Martin Coleman",220,340);
+         ctx.font="20px Georgia";
+         ctx.fillText("Click To Play",240,380);
         
-        
-        
-        
-        
-        
+    };
         
         	 // A function to repeat every time the animation loops.
-		function update() {
-			
-			// clear the canvas so the object can be redrawn
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			// draws the ball
-			ball.draw();
-            userball.draw();
+		function repeat() {
+			if (animate==true){
             
-            //to check if touching
-            intersect();
-            
-            
-        /*//draw blocks
-            for(var i = 0; i < blocks.length; i++){
-				
-				if(blocks[i].isAlive)
-					blocks[i].draw();
-				
-			} // for*/
-			
-			// add velocity to ball
-			ball.position.x -= ball.velocity.x ;
-			ball.position.y -= ball.velocity.y ;
-			
-			// adds gravity (acceleration)
-			//ball.velocity.y += ball.acceleration;
-            
-			// if ball reaches bottom of the canvas, bounce back
-			if(ball.position.y >= canvas.height - ball.radius){
-				// stops the ball from leaving canvas
-				ball.position.y = canvas.height - ball.radius;
-				// makes the ball bounce back
-				ball.velocity.y = -ball.velocity.y;
-			} // if
-            
-			// if the ball reaches the top of the canvas, bounce back
-			if(ball.position.y <= 0 + ball.radius){
-				// stops the ball from leaving canvas
-				ball.position.y = 0 + ball.radius;
-				// makes the ball bounce back
-				ball.velocity.y = -ball.velocity.y;
-			} // if
-            
-            
-			// if ball reaches right side of the canvas, bounce back
-			if(ball.position.x >= canvas.width - ball.radius){
-				// stops the ball from leaving canvas
-				ball.position.x = canvas.width - ball.radius;
-				// makes the ball bounce back
-				ball.velocity.x = - ball.velocity.x;
-			} // if
-            
-            
-			// if ball reaches left side of the canvas, bounce back
-			if(ball.position.x <= 0 + ball.radius){
-				// stops the ball from leaving canvas
-				ball.position.x = 0 + ball.radius;
-				// makes the ball bounce back
-				ball.velocity.x = - ball.velocity.x;
-			} // if
-            
-            
-            /*for(var i = 0; i < blocks.length; i++){
-			
-				// check to see if rectangle is alive and if the ball has entered it
-				if(blocks[i].isAlive && checkIfInGrid(ball.position.x, ball.position.y, blocks[i].position.x,           
-                                                      blocks[i].position.y,blocks[i].width, blocks[i].height)){
-					// destroy block
-					blocks[i].isAlive = false;
-					// bounce off block
-					ball.velocity.y = -ball.velocity.y;
-				} // if
-				
-				
-			} // for*/
-            
-            
-			window.requestAnimationFrame(update);
-		} // update()
+                // clear the canvas so the object can be redrawn
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // draws the ball
+                ball.draw();
+                userball.draw();
+                Rectangle.draw();
+
+                //to check if touching
+                intersect();
+
+                // add velocity to ball
+                ball.position.x -= ball.velocity.x ;
+                ball.position.y -= ball.velocity.y ;
+
+                // adds gravity (acceleration)
+                ball.velocity.y += ball.acceleration;
+
+                // if ball reaches bottom of the canvas, bounce back
+                if(ball.position.y >= canvas.height - ball.radius){
+                    // stops the ball from leaving canvas
+                    ball.position.y = canvas.height - ball.radius;
+                    // makes the ball bounce back
+                    ball.velocity.y = -ball.velocity.y;
+                } // if
+
+                // if the ball reaches the top of the canvas, bounce back
+                if(ball.position.y <= 0 + ball.radius){
+                    // stops the ball from leaving canvas
+                    ball.position.y = 0 + ball.radius;
+                    // makes the ball bounce back
+                    ball.velocity.y = -ball.velocity.y;
+                } // if
+
+
+                // if ball reaches right side of the canvas, bounce back
+                if(ball.position.x >= canvas.width - ball.radius){
+                    // stops the ball from leaving canvas
+                    ball.position.x = canvas.width - ball.radius;
+                    // makes the ball bounce back
+                    ball.velocity.x = - ball.velocity.x;
+                } // if
+
+
+                // if ball reaches left side of the canvas, bounce back
+                if(ball.position.x <= 0 + ball.radius){
+                    // stops the ball from leaving canvas
+                    ball.position.x = 0 + ball.radius;
+                    // makes the ball bounce back
+                    ball.velocity.x = - ball.velocity.x;
+                } // if
+
+                
+                 // check to see if rectangle isnt alive
+                    if(Rectangle.isAlive!=true){
+                        //call initRect to create 
+                        initRect();
+                        
+                    } // if
+                
+
+                    // check to see if rectangle is alive and if the ball has entered it
+                    if(Rectangle.isAlive && checkIfInGrid(userball.position.x, userball.position.y, Rectangle.position.x,           
+                                                          Rectangle.position.y,Rectangle.width, Rectangle.height)==true){
+                        // destroy block
+                        Rectangle.isAlive = false;
+                        score++;
+                        //console.log("Destroy");
+                    } // if
+                
+                   
+
+
+                window.requestAnimationFrame(repeat);
+                
+            }
+		} // repeat()
         
         
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //setup and Animate Ball        
-			 
+        
 			 // initialise canvas
 			 initCanvas();
-            
+        
+             //display startup screen
+             startup();
+ 
              // initialise ball
              initBall();
             
             // initialise userball
              initUserBall();
-			 
-			 
-			/* // set up blocks
-			 for(var i = 0; i < 10; i++){
-				 
-				 for(var j = 0; j < 4; j++){
-					 
-					 var blueRect = new Rectangle();
-					 
-					 blueRect.position.x = 50 * i;
-					 blueRect.position.y = 30 * j;
-					 blocks.push(blueRect);
-					 
-				 } // for
-				
-			 } // for*/
+        
+            // initialise rect
+             initRect();
 			 
 			 // get the animation going
-      	     update();
+      	     repeat();
 			
 		 
             
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //User Interaction       
         
-       
-        
-        
         // Add an event listener to the keydown event. 
         window.addEventListener("keydown", function(event) { 
         // Just log the event to the console.
         //console.log(event);
             
-        switch (event.which) {
-        // key code for left arrow 
-        case 37:
-            if(userball.position.x-userball.radius>=userball.radius){
-                userball.position.x-=userball.radius;
-                 userball.draw();
-            }
-            break;
-        
-        // key code for right arrow 
-        case 39:  
-            if(userball.position.x+userball.radius<canvas.width){    
-                userball.position.x+=userball.radius;   
-                userball.draw();
-            }
-            break;
-                
-        // key code for down arrow 
-        case 40:
-            if(userball.position.y+userball.radius<canvas.height){    
-                userball.position.y+=userball.radius;
-                 userball.draw();
-            }
-            break;
-                
-        // key code for up arrow 
-        case 38:
-            if(userball.position.y-userball.radius>=userball.radius){
-                userball.position.y-=userball.radius;
-                userball.draw();
-            }
-            break;    
-    }  
+            if (animate==true){
+
+                switch (event.which) {
+                // key code for left arrow 
+                case 37:
+                    if(userball.position.x-userball.radius>=userball.radius){
+                        userball.position.x-=userball.radius;
+                         userball.draw();
+                    }
+                    break;
+
+                // key code for right arrow 
+                case 39:  
+                    if(userball.position.x+userball.radius<canvas.width){    
+                        userball.position.x+=userball.radius;   
+                        userball.draw();
+                    }
+                    break;
+
+                // key code for down arrow 
+                case 40:
+                    if(userball.position.y+userball.radius<canvas.height){    
+                        userball.position.y+=userball.radius;
+                         userball.draw();
+                    }
+                    break;
+
+                // key code for up arrow 
+                case 38:
+                    if(userball.position.y-userball.radius>=userball.radius){
+                        userball.position.y-=userball.radius;
+                        userball.draw();
+                    }
+                    break;    
+                    }  
+            }//end if
             
         });
-        //
+        
+         
+     canvas.addEventListener("click", function(event) { 
+        
+            if (animate==false){
+            //reset game  
+            
+                 // initialise ball
+                 initBall();
+
+                 // initialise userball
+                 initUserBall();
+
+                 //lets animation continue
+                 animate=true
+                 
+                 // initialise rect
+                 initRect();
+                
+                 //Reset Score to 0
+                 score=0;
+
+                 //starts off animation again
+                 repeat();
+            }
+          
+      });
+         
 
 
     </script>
