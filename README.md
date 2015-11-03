@@ -2,13 +2,13 @@ Martin Coleman Graphics Project 2015
 ====================================
 
 ##"Dodge" By Martin Coleman
-This is my first Game i have built using HTML 5 and Canvas.
+This is my first game i have built using HTML 5 and Canvas.
 It has been designed for as project for my Graphics Programing Module.
 I have designed the game to incorporate most of what i have learned over the course of the module including Canvas animation, Javascript(Use of Functions and objects), User Interaction(Both mouse and keys) and Use of Collisions.
 
 ##Instructions/How to Play
 The game plays in your web browser(Mozilla/Chrome).
-The object of the game is to Dodge the red ball as it bounces around the screen and to collect the Lime coloured rectangle/Squares.
+The object of the game is to Dodge the red ball as it bounces around the screen and to collect the Lime coloured rectangle/squares.
 Every time you collect the rectangles they disappear and get redrawn to another random part of the canvas. Everytime you collect a rectangle it counts as a score. You move the yellow ball around the screen with the arrow keys. 
 If your yellow ball touches the red ball its "GAME OVER" and your score gets displayed but dont worry only one click away from doing it all over again!
 
