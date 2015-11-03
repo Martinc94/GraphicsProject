@@ -5,23 +5,17 @@
   <head>
     <meta charset="UTF-8">
     <title>Canvas</title>
-
     <style type="text/css">
       canvas {
         border: 2px solid lime;   
         margin-left: auto;
         margin-right: auto;
         display: block;
-    
-      }
-        
+      }  
      body {background-color:black}
     </style>
-
   </head>
-
   <body>
-
     <canvas id="canvas-for-ball"></canvas>
 
     <script type="text/javascript">
@@ -30,7 +24,7 @@
        // Get a 2D context for the canvas.
        var ctx = canvas.getContext("2d"); 
        
-        // Objects
+//Objects //////////////////////////////////////////////////////////////////////////////
 
         var ball = {
 
@@ -38,18 +32,13 @@
             ,position: { x: 0, y: 0 }
             ,velocity: { x: 0, y: 0 }
             ,acceleration: 0
-
              // function to draw ball
             ,draw: function() {
-
                 // Make the fill style red.
-            ctx.fillStyle = "rgb(255, 0, 0)";
-
+                ctx.fillStyle = "rgb(255, 0, 0)";
                 ctx.beginPath();
-
                 // draws circle 
                 ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI); 
-
                 // fill circles colour
                 ctx.fill();
 
@@ -63,33 +52,29 @@
             ,position: { x: 0, y: 0 }
             ,velocity: { x: 0, y: 0 }
             ,acceleration: 0
-
-             // function to draw ball
+             // function to draw Userball
             ,draw: function() {
 
                 // Make the fill style red.
-            ctx.fillStyle = "rgb(255, 255, 0)";
-
+                ctx.fillStyle = "rgb(255, 255, 0)";
                 ctx.beginPath();
-
                 // draws circle 
                 ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI); 
-
                 // fill circles colour
-                ctx.fill();
+                 ctx.fill();
 
             } // draw()
 
          }; // Userball object
         
         
-		 var Rectangle={
+        var Rectangle={
 			 
 			 position : {x: 50, y: 50}
 			 ,width : 40
 			 ,height : 40
 			 ,isAlive : true
-			 
+             //Function to draw Rectangle
 			 ,draw : function(){
 				 
 			 	if(this.isAlive){
@@ -101,9 +86,9 @@
 			 	} // if
 				 
 			 } // draw()
-		 }; // Rectanle Object
+		 }; // Rectangle Object
         
-//Variables//////////////////////////////////////////////////////////////////////////////////
+//Variables/////////////////////////////////////////////////////////////////////////////
 		 
 		 var gravity = 0.01;
 		    
@@ -111,135 +96,125 @@
         
          var score=0;
         
-//Functions//////////////////////////////////////////////////////////////////////////
+//Functions/////////////////////////////////////////////////////////////////////////////
         
         
         function initCanvas(){
-			 
-			 //height and width of the canvas
+			 //Set height and width of the canvas(600x600)
 			 canvas.width = 600;
 			 canvas.height = 600;
 			 
 		 } // initcanvas()
         
         function initBall(){
-			 // initialise the ball object
+			 //initialise the ball object
 			 ball.radius = 20;
 			 ball.position.x = canvas.width / 2;
 			 ball.position.y = canvas.height + 5;
 			 ball.velocity.x = 5;
 			 ball.velocity.y = 2;
-			 ball.acceleration = gravity;
-			 
+			 ball.acceleration = gravity;	 
 		 } // initball()
-        
-        
+               
         function initUserBall(){
 			 // initialise the ball object
 			 userball.radius = 20;
 			 userball.position.x = canvas.width  /2;
-			 userball.position.y = canvas.height /2;
-			 
-			 
+			 userball.position.y = canvas.height /2; 
 		 } // initUserBall()
         
         function initRect(){
 			 // initialise the Rectangle object
             do{
+             //Get random number between 1-500 
 			 var xRect=Math.floor((Math.random() * 500) + 1); 
-             var yRect=Math.floor((Math.random() * 500) + 1); 
-                
+             var yRect=Math.floor((Math.random() * 500) + 1);    
+             //Until Both are divisible By 2(Fixes Bug where userball doesnt recognize Rectangle)   
             }while(xRect % 2 === 0&& yRect % 2=== 0);
             
+            //Gives rectangle object its needed Coordinated
             Rectangle.position.x=xRect;
             Rectangle.position.y=yRect;
-            
-            Rectangle.isAlive=true;
-			 
+            //sets rectangle to alive so it can be drawn on screen
+            Rectangle.isAlive=true; 
 		 } // initRect()
         
-        
+        //A Function to see if ball is in grid        
         function checkIfInGrid(ballX, ballY, gridX, gridY, gridWidth, gridHeight){
-			 
 			 var isInGrid = false;
-			 
-			 // checks to see if point clicked is in the specified grid square
+			 // checks to see if Ball is in the specified grid square
 			 if(ballX > gridX && ballX < (gridX + gridWidth)
 				&& ballY > gridY && ballY < (gridY + gridHeight)){
-				 
+				 //ball is in grid
 				 isInGrid = true;
 			 } else {
-				 
+				 //ball isnt in Grid
 				 isInGrid = false;
 			 }  // if
-			 
+             //returns if in grid or not
 			 return isInGrid;
 		 }; // checkIfInGrid()
 		 
-        //method to see if balls Intersect
-         function intersect (){
+        //A Function to see if balls Intersect
+        function intersect (){
              distanceX = userball.position.x- ball.position.x;
              distanceY = userball.position.y- ball.position.y;
              radiusSum = userball.radius + ball.radius;
              
+            //if Userball and Ball and Touching
              if((distanceX * distanceX + distanceY * distanceY <= radiusSum * radiusSum) !=0){
                  //balls intersect
                  gameOver();
              }
          
-    };//end intersect
+    };//intersect()
     
-         function gameOver (){
+        //A function to display when Game Over Screen and stop animation
+        function gameOver (){
              //prints red square over Canvas
              ctx.fillStyle = "rgb(255, 0, 0)";
              ctx.fillRect(0, 0, canvas.width, canvas.height);       
-
              //print text to canvas
              ctx.fillStyle = "rgb(0, 0, 0)";
              ctx.font="50px Georgia";
              ctx.fillText("Game Over",170,canvas.height/2);
-
              ctx.font="20px Georgia";
              ctx.fillText("Click To Reset",230,340);
              ctx.fillText("Your Score Is "+score,230,380);
 
              //stops animation from happening
              animate=false;               
-        };//end gameOver   
+        };//gameOver()   
         
-    function startup(){
-        
-         ctx.fillStyle = "rgb(255, 0, 0)";
-         ctx.fillRect(0, 0, canvas.width, canvas.height);
-         ctx.fillStyle = "rgb(0, 0, 0)";
-         //print text to canvas
-         ctx.font="50px Georgia";
-         ctx.fillText("\"Dodge\"",210,canvas.height/2);
-         ctx.font="20px Georgia";
-         ctx.fillText("By Martin Coleman",220,340);
-         ctx.font="20px Georgia";
-         ctx.fillText("Click To Play",240,380);
+        //A function to Display the Startup Screen 
+        function startup(){
+             ctx.fillStyle = "rgb(255, 0, 0)";
+             ctx.fillRect(0, 0, canvas.width, canvas.height);
+             ctx.fillStyle = "rgb(0, 0, 0)";
+             //print text to canvas
+             ctx.font="50px Georgia";
+             ctx.fillText("\"Dodge\"",210,canvas.height/2);
+             ctx.font="20px Georgia";
+             ctx.fillText("By Martin Coleman",220,340);
+             ctx.font="20px Georgia";
+             ctx.fillText("Click To Play",240,380);
         
     };
         
-        	 // A function to repeat every time the animation loops.
+        // A function to repeat every time the animation loops.
 		function repeat() {
 			if (animate==true){
-            
                 // clear the canvas so the object can be redrawn
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 // draws the ball
                 ball.draw();
                 userball.draw();
                 Rectangle.draw();
-
-                //to check if touching
+                //Check to see if touching
                 intersect();
-
-                // add velocity to ball
+                //adds velocity to ball
                 ball.position.x -= ball.velocity.x ;
                 ball.position.y -= ball.velocity.y ;
-
                 // adds gravity (acceleration)
                 ball.velocity.y += ball.acceleration;
 
@@ -280,67 +255,48 @@
                 
                  // check to see if rectangle isnt alive
                     if(Rectangle.isAlive!=true){
-                        //call initRect to create 
+                        //call initRect to create rectangle
                         initRect();
-                        
                     } // if
                 
-
                     // check to see if rectangle is alive and if the ball has entered it
                     if(Rectangle.isAlive && checkIfInGrid(userball.position.x, userball.position.y, Rectangle.position.x,           
                                                           Rectangle.position.y,Rectangle.width, Rectangle.height)==true){
-                        // destroy block
+                        // Destroy Rectangle
                         Rectangle.isAlive = false;
                         score++;
-                        //console.log("Destroy");
                     } // if
-                
-                   
-
-
-                window.requestAnimationFrame(repeat);
-                
+                //Loops by calling Repeat Function
+                window.requestAnimationFrame(repeat);   
             }
-		} // repeat()
+		} //repeat()
         
         
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//setup and Animate Ball        
+//Initial Setup        
         
-			 // initialise canvas
+			 // initialise the canvas
 			 initCanvas();
         
-             //display startup screen
+             //Display startup screen
              startup();
  
-             // initialise ball
-             initBall();
-            
-            // initialise userball
-             initUserBall();
-        
-            // initialise rect
-             initRect();
-			 
-			 // get the animation going
-      	     repeat();
-			
-		 
             
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //User Interaction       
         
-        // Add an event listener to the keydown event. 
-        window.addEventListener("keydown", function(event) { 
-        // Just log the event to the console.
-        //console.log(event);
-            
+    // An event listener for keydown event. 
+    //Allows user to move UserBall Object
+    window.addEventListener("keydown", function(event) { 
+            //If your allowed to Move UserBall
             if (animate==true){
 
                 switch (event.which) {
                 // key code for left arrow 
                 case 37:
+                    //if stays UserBall within Canvas
                     if(userball.position.x-userball.radius>=userball.radius){
+                        //Moves Userball Left
                         userball.position.x-=userball.radius;
                          userball.draw();
                     }
@@ -348,7 +304,9 @@
 
                 // key code for right arrow 
                 case 39:  
-                    if(userball.position.x+userball.radius<canvas.width){    
+                    //if stays UserBall within Canvas
+                    if(userball.position.x+userball.radius<canvas.width){ 
+                        //Moves Userball Right
                         userball.position.x+=userball.radius;   
                         userball.draw();
                     }
@@ -356,15 +314,19 @@
 
                 // key code for down arrow 
                 case 40:
-                    if(userball.position.y+userball.radius<canvas.height){    
+                    //if stays UserBall within Canvas 
+                    if(userball.position.y+userball.radius<canvas.height){ 
+                        //Moves Userball down
                         userball.position.y+=userball.radius;
-                         userball.draw();
+                        userball.draw();
                     }
                     break;
 
                 // key code for up arrow 
                 case 38:
+                    //if stays UserBall within Canvas
                     if(userball.position.y-userball.radius>=userball.radius){
+                        //Moves Userball Up
                         userball.position.y-=userball.radius;
                         userball.draw();
                     }
@@ -373,13 +335,13 @@
             }//end if
             
         });
-        
-         
-     canvas.addEventListener("click", function(event) { 
-        
+    
+    // An event listener for Click event. 
+    //Allows user to Click on canvas to Start Animation
+    canvas.addEventListener("click", function(event) { 
+            //When you click on screen if animation isnt running 
             if (animate==false){
-            //reset game  
-            
+                 //Reset game and initialise Game 
                  // initialise ball
                  initBall();
 
@@ -395,7 +357,7 @@
                  //Reset Score to 0
                  score=0;
 
-                 //starts off animation again
+                 //starts off animation
                  repeat();
             }
           
