@@ -13,15 +13,14 @@ Every time you collect the rectangles they disappear and get redrawn to another 
 If your yellow ball touches the red ball its "GAME OVER" and your score gets displayed but dont worry only one click away from doing it all over again!
 
 ###Controls
-Left Mouse Click - Start playing
 
-Left arrow key - Moves ball Left 
-
-Right arrow key - Moves ball Right 
-
-Up arrow key - Moves ball Up
-
-Down arrow key - Moves ball Down 
+Control | Description
+--------|---------------
+Left Mouse Click | Start playing
+Left arrow key | Moves ball Left 
+Right arrow key | Moves ball Right 
+Up arrow key | Moves ball Up
+Down arrow key | Moves ball Down 
 
 
 
